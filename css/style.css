@@ -9182,8 +9182,6 @@ pre code {
   padding-left: 20px;
   margin-right: auto;
   margin-left: auto;
-  display: flex;
-  flex-direction: row;
 }
 
 .row {
@@ -15342,6 +15340,7 @@ button.bg-dark:focus {
   right: 0;
   left: 0;
   z-index: 1030;
+  height: 51px;
 }
 
 .fixed-bottom {
@@ -17331,12 +17330,12 @@ input:focus {
 
 /* Sidebar */
 .sidebar {
-  /*position: fixed;*/
-  min-height: calc(100vh - 70px);
+  position: fixed;
+  min-height: calc(100vh - 51px);
   background: #ffffff;
   font-family: "ubuntu-regular", sans-serif;
   padding: 0;
-  width: 260px;
+  width: 240px;
   z-index: 11;
   transition: width 0.25s ease, background 0.25s ease;
   -webkit-transition: width 0.25s ease, background 0.25s ease;
@@ -17550,8 +17549,8 @@ input:focus {
 @media screen and (max-width: 991px) {
   .sidebar-offcanvas {
     position: fixed;
-    max-height: calc(100vh - 70px);
-    top: 70px;
+    max-height: calc(100vh - 51px);
+    top: 51px;
     bottom: 0;
     overflow: auto;
     right: -260px;
@@ -17656,7 +17655,7 @@ input:focus {
   .navbar .navbar-menu-wrapper .navbar-nav .nav-item.dropdown .navbar-dropdown {
     left: 20px;
     right: 20px;
-    top: 70px;
+    top: 51px;
     width: calc(100% - 40px);
   }
 }
@@ -17744,7 +17743,7 @@ input:focus {
   -ms-transition: width 0.25s ease, background 0.25s ease;
   background: #ffffff;
   width: 260px;
-  height: 70px;
+  height: 51px;
 }
 
 .sidebar-light .navbar.default-layout-navbar .navbar-brand-wrapper {
@@ -17794,7 +17793,7 @@ input:focus {
   padding-left: 24px;
   padding-right: 24px;
   width: calc(100% - 260px);
-  height: 70px;
+  height: 51px;
 }
 
 @media (max-width: 991px) {
@@ -17808,7 +17807,7 @@ input:focus {
 .navbar.default-layout-navbar .navbar-menu-wrapper .navbar-toggler {
   border: 0;
   color: inherit;
-  height: 70px;
+  height: 51px;
   border-radius: 0px;
   padding-left: 5px;
   padding-right: 20px;
@@ -17876,7 +17875,7 @@ input:focus {
   font-size: 0.875rem;
   margin-left: 1.5rem;
   margin-right: 1.5rem;
-  height: 70px;
+  height: 51px;
   display: -webkit-flex;
   display: flex;
   -webkit-align-items: center;
@@ -18503,6 +18502,8 @@ html {
   overflow-x: hidden;
   padding-right: 0 !important;
 }
+/*隐藏滚动条*/
+.body,html::-webkit-scrollbar { width: 0 !important }
 
 *:-moz-full-screen,
 *:-webkit-full-screen,
@@ -18511,15 +18512,14 @@ html {
 }
 
 .page-body-wrapper {
-  min-height: calc(100vh - 70px);
+  min-height: calc(100vh - 51px);
   display: -webkit-flex;
   display: flex;
   -webkit-flex-direction: row;
   flex-direction: row;
   padding-left: 0;
   padding-right: 0;
-  padding-top: 5px;
-  padding-top: 70px;
+  padding-top: 51px;
 }
 
 .page-body-wrapper.full-page-wrapper {
@@ -18529,10 +18529,11 @@ html {
 }
 
 .main-panel {
-  overflow-y: scroll;
+  /*overflow-y: scroll;*/
+  margin-left: 250px;
   transition: width 0.25s ease, margin 0.25s ease;
   width: calc(100% - 260px);
-  min-height: calc(100vh - 70px);
+  min-height: calc(100vh - 51px);
   display: -webkit-flex;
   display: flex;
   -webkit-flex-direction: column;
