@@ -14023,7 +14023,11 @@ button.close {
   padding: 0.5rem 0.75rem;
   color: #212529;
 }
-
+.lunbo {
+  position: absolute;
+  margin-top: 79%;
+}
+/* 
 .carousel {
   position: relative;
 }
@@ -14179,8 +14183,8 @@ button.close {
 
 .carousel-control-next-icon {
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E");
-}
-
+} */
+/* 
 .carousel-indicators {
   position: absolute;
   right: 0;
@@ -14241,7 +14245,7 @@ button.close {
   padding-bottom: 20px;
   color: #fff;
   text-align: center;
-}
+} */
 
 .align-baseline {
   vertical-align: baseline !important;
@@ -18347,7 +18351,7 @@ h6,
 }
 
 p {
-  font-size: .9375rem;
+  font-size: 0.9375rem;
   line-height: 1.5;
 }
 
@@ -18501,6 +18505,7 @@ body,
 html {
   overflow-x: hidden;
   padding-right: 0 !important;
+  font-size: 14px;
 }
 /*隐藏滚动条*/
 .body,html::-webkit-scrollbar { width: 0 !important }
