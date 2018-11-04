@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>GalaxyOJ</title>
+  <title>noticifications</title>
   <!-- plugins:css -->
   <link rel="stylesheet" href="vendors/iconfonts/mdi/css/materialdesignicons.min.css">
   <link rel="stylesheet" href="vendors/css/vendor.bundle.base.css">
@@ -14,151 +14,25 @@
   <!-- inject:css -->
   <link rel="stylesheet" href="css/style.css">
   <!-- endinject -->
-  <link rel="shortcut icon" href="images/favicon.png" />
-  <!-- 引进bootstrap -->
-  <!-- 新 Bootstrap 核心 CSS 文件 -->
-  <!-- <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"> -->
-   
-  <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
-  <!-- <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script> -->
-   
-  <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-  <!-- <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+  <link rel="shortcut icon" href="img/favicon.png" />
 </head>
 <body>
   <div class="container-scroller">
     <!-- partial:partials/_navbar.html -->
-    <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
-      <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
-        <a class="navbar-brand brand-logo" href="index.html">GalaxyOJ</a>        
-      </div>
-      <div class="navbar-menu-wrapper d-flex align-items-stretch">       
-        <!-- 页面头部菜单 将root放进来-->
-        <ul class="navbar-nav navbar-nav-right">        
-          <li class="nav-item dropdown">
-            root
-            <!-- <a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
-              <i class="mdi mdi-email-outline"></i>
-              <span class="count-symbol bg-warning"></span>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="messageDropdown">
-              <h6 class="p-3 mb-0">Messages</h6>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item preview-item">
-                <div class="preview-thumbnail">
-                    <img src="images/faces/face4.jpg" alt="image" class="profile-pic">
-                </div>
-                <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                  <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Mark send you a message</h6>
-                  <p class="text-gray mb-0">
-                    1 Minutes ago
-                  </p>
-                </div>
-              </a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item preview-item">
-                <div class="preview-thumbnail">
-                    <img src="images/faces/face2.jpg" alt="image" class="profile-pic">
-                </div>
-                <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                  <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Cregh send you a message</h6>
-                  <p class="text-gray mb-0">
-                    15 Minutes ago
-                  </p>
-                </div>
-              </a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item preview-item">
-                <div class="preview-thumbnail">
-                    <img src="images/faces/face3.jpg" alt="image" class="profile-pic">
-                </div>
-                <div class="preview-item-content d-flex align-items-start flex-column justify-content-center">
-                  <h6 class="preview-subject ellipsis mb-1 font-weight-normal">Profile picture updated</h6>
-                  <p class="text-gray mb-0">
-                    18 Minutes ago
-                  </p>
-                </div>
-              </a>
-              <div class="dropdown-divider"></div>
-              <h6 class="p-3 mb-0 text-center">4 new messages</h6>
-            </div> -->
-          </li>        
-        </ul>
-        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
-          <span class="mdi mdi-menu"></span>
-        </button>
-      </div>
-    </nav>
-    <!-- partial -->
-    <div class="container-fluid page-body-wrapper">
-      <!-- 侧边菜单栏partial:partials/_sidebar.html -->
-      <nav class="sidebar sidebar-offcanvas" id="sidebar">
-        <ul class="nav">        
-          <li class="nav-item">
-            <a class="nav-link" href="index.html">
-              <span class="menu-title">Home</span>
-              <i class="mdi mdi-home menu-icon"></i>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="problems.html">
-              <span class="menu-title">Problems</span>
-              <i class="mdi mdi-crosshairs-gps menu-icon"></i>
-            </a>            
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="problems.html">
-              <span class="menu-title">Contests</span>
-              <i class="mdi mdi-contacts menu-icon"></i>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="problems.html">
-              <span class="menu-title">Solutions</span>
-              <i class="mdi mdi-format-list-bulleted menu-icon"></i>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="problems.html">
-              <span class="menu-title">Tutorials</span>
-              <i class="mdi mdi-chart-bar menu-icon"></i>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="problems.html">
-              <span class="menu-title">Course</span>
-              <i class="mdi mdi-table-large menu-icon"></i>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#general-pages" aria-expanded="false" aria-controls="general-pages">
-              <span class="menu-title">Status</span>
-              <i class="mdi mdi-medical-bag menu-icon"></i>
-            </a>          
-          </li>  
-          <li class="nav-item">
-            <a class="nav-link" href="problems.html">
-              <span class="menu-title">Rank</span>
-              <i class="iconfont icon-rankedfirst" style="padding-left: 119px;"></i>
-            </a>
-          </li>       
-        </ul>
-      </nav>
       <!-- partial -->
       <div class="main-panel">
         <div class="content-wrapper">
           <div class="row">
-            <div class="col-12 grid-margin">
-              
+            <div class="col-12 grid-margin">            
               <div id="containerIn">
                 <div id="list" style="left: -600px;">
                  <!-- 设置图像的父级元素定位为向左600px，即是左移一个图片的宽度 -->
-                <img src="./images/dashboard/img_1.jpg" alt="1"> 
+                <img src="./img/img_1.jpg" alt="1"> 
                 <!-- 设置的是5张图片自动轮播，此处会有7张图片，并且红色代码表示的图片和蓝色代码表示的图片是相同的。这是因为每张图片都有向前和向后两种单击事件，要使第一张图片向前单击显示第五张图片，就需要在其前方添加第五张图片，避免在第一张图片单击向左时显示空白；同理，在第五张图片之后也要添加第一张图片，使其实现平稳过渡 --> 
-                <img src="./images/dashboard/img_1.jpg" alt="1">   
-                <img src="./images/dashboard/img_2.jpg" alt="2">                   
-                <img src="./images/dashboard/img_3.jpg" alt="3">   
-                <img src="./images/dashboard/img_4.jpg" alt="4">   
+                <img src="./img/img_1.jpg" alt="1">   
+                <img src="./img/img_2.jpg" alt="2">                   
+                <img src="./img/img_3.jpg" alt="3">   
+                <img src="./img/img_4.jpg" alt="4">   
                 <!-- <img src="images/16.jpg" alt="5">
                 <img src="images/12.jpg" alt="5"> -->
                 </div>
@@ -277,7 +151,7 @@
             <div class="col-md-4 stretch-card grid-margin">
               <div class="card bg-gradient-danger card-img-holder text-white">
                 <div class="card-body">
-                  <img src="images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image"/>
+                  <img src="img/circle.svg" class="card-img-absolute" alt="circle-image"/>
                   <h4 class="font-weight-normal mb-3">Weekly Sales
                     <i class="mdi mdi-chart-line mdi-24px float-right"></i>
                   </h4>
@@ -289,7 +163,7 @@
             <div class="col-md-4 stretch-card grid-margin">
               <div class="card bg-gradient-info card-img-holder text-white">
                 <div class="card-body">
-                  <img src="images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image"/>                  
+                  <img src="img/circle.svg" class="card-img-absolute" alt="circle-image"/>                  
                   <h4 class="font-weight-normal mb-3">Weekly Orders
                     <i class="mdi mdi-bookmark-outline mdi-24px float-right"></i>
                   </h4>
@@ -301,7 +175,7 @@
             <div class="col-md-4 stretch-card grid-margin">
               <div class="card bg-gradient-success card-img-holder text-white">
                 <div class="card-body">
-                  <img src="images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image"/>                                    
+                  <img src="img/circle.svg" class="card-img-absolute" alt="circle-image"/>                                    
                   <h4 class="font-weight-normal mb-3">Visitors Online
                     <i class="mdi mdi-diamond mdi-24px float-right"></i>
                   </h4>
@@ -385,100 +259,3 @@
 
 </html>
 
-<script type="text/javascript">
-  //实现轮播，由于bootstrap加进来会影响整体样子，所以使用纯js实现
-  window.onload=function(){
-  var list=document.getElementById('list'); //获取图片元素的父级元素，并命名为list
-  var prev=document.getElementById('prev'); //获取左箭头
-  var next=document.getElementById('next'); //获取右箭头
-
-  function animate(offset){ //设置一个名为animate的函数，该函数接收一个参数
-
-  var newleft=parseInt(list.style.left)+offset; //获取图片的父级元素的左侧的定位值，并加上传入的参数offset
-
-  if(newleft<-3000){ //图片的父级div在移动的过程中，显示的图片的定位都是负值，如图3所示
-
-  list.style.left= -600+'px'; //但图片显示到五张图片上的最后一张时，自动跳转到第一张图片
-  }else if(newleft>-600){ //当在第一张图片上单击向左的按钮时，自动跳转到最后一张
-  list.style.left= -3000+'px';
-  }else{
-  list.style.left=newleft+'px';
-  }
-  }
-  prev.onclick=function(){ //向左的单击事件
-
-animate(600);
-}
-
-
-next.onclick=function(){ //向右的单击事件
-animate(-600)
-}
-
-
-var timer;
-function play(){
-timer=setInterval(function(){ //设置间歇调用，时间间隔为1500毫秒
-next.onclick() //此处是自动向右切换，如果想设置为向左切换，把next换为prev即可
-},1500)
-}
-play(); //实现自动调用
-
-
-var container=document.getElementById('containerIn'); //获取最外层的容器元素
-function stop(){ 
-clearInterval(timer);
-}
-container.onmouseover=stop; //当鼠标移动到上方时，清除定时器
-container.onmouseout=play; //当鼠标从容器元素上方移走时，进行自动轮播
-
-
-var buttons=document.getElementById('buttons').getElementsByTagName('span');
-var index=1;
-
-
-function buttonsShow(){
-for(var i=0;i<buttons.length;i++){
-if(buttons[i].className=='on'){ //如果某个span设置了class='on'，那么就将其的class属性设置为空
-buttons[i].className='';
-}
-}
-//数组从0开始，故index需要-1
-buttons[index-1].className='on'; //设置下一个span的class属性值为'on'，即是高亮显示
-}
-
-
-prev.onclick=function(){
-index-=1;
-if(index<1){
-index=5;
-}
-buttonsShow();
-animate(600);
-}
-next.onclick=function(){
-//由于上面定时器的作用，index会一直递增下去，而元圆点只有5个，因此需要先做出判断
-index+=1;
-if(index>5){
-index=1;
-}
-buttonsShow();
-animate(-600);
-}
-
-
-//点击任意一个小圆点就切换到所对应的图片
-for(var i=0;i<buttons.length;i++){
-
-(function(i){ //使用立即执行函数
-buttons[i].onclick=function(){
-var clickIndex=parseInt(this.getAttribute('index'));
-var offset=600*(index-clickIndex);
-animate(offset); //存放鼠标点击之后的位置，用于小圆点的正常显示
-index=clickIndex;
-buttonsShow();
-}
-})(i) 
-} 
-}
-</script>
