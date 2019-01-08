@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% import 'tools.html' as tools %}
+
+{% block title %}User Management - Galaxy OJ{% endblock %}
+
+{% block page_content %}
+    <div class="container">
+        {% for errs in form.errors.values() %}
+            {% for e in errs %}
+                <div class="alert alert-danger" role='alert'>{{e}}</div>
+            {% endfor %}
+        {% endfor %}
+
+        <h1>User Management</h1>
+        <form action="{{url_for('admin.manage_user', uid=uid)}}" method="POST">
+
+{%if uid==1%}
+<font  size="30">sorry:root don't need to modify own account.</font>
+<br>
+<img src="http://www.gdfzoj.com/upload/fetch_image/9ceb8830b43206b6e0a6f5816292b8d6.jpg"/>
+<img src="http://www.gdfzoj.com/upload/fetch_image/9ceb8830b43206b6e0a6f5816292b8d6.jpg"/>
+<img src="http://www.gdfzoj.com/upload/fetch_image/9ceb8830b43206b6e0a6f5816292b8d6.jpg"/>
+<img src="http://www.gdfzoj.com/upload/fetch_image/9ceb8830b43206b6e0a6f5816292b8d6.jpg"/>
+<img src="http://www.gdfzoj.com/upload/fetch_image/9ceb8830b43206b6e0a6f5816292b8d6.jpg"/>
+<img src="http://www.gdfzoj.com/upload/fetch_image/9ceb8830b43206b6e0a6f5816292b8d6.jpg"/>
+{% else  %}
+
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{form.login_name.label}}
+                {{form.login_name(class_="form-control")}}
+            </div>
+
+            <div class="form-group">
+                {{form.privilege_level.label}}
+                {{form.privilege_level(class_="form-control")}}
+            </div>	
+            <div class="form-group">
+                {{form.password.label}}
+            <span>(Hint: If you don't want to change the password, please leave it empty.)</span>
+                {{form.password(class_="form-control",type="password")}}
+            </div>
+            <div class="form-group">
+                {{form.email.label}}
+                {{form.email(class_="form-control",type="email")}}
+            </div>
+            <div class="form-group">
+                {{form.nickname.label}}
+                {{form.nickname(class_="form-control")}}
+            </div>
+            <div class="form-group">
+                {{form.real_name.label}}
+                {{form.real_name(class_="form-control")}}
+            </div>
+            <div class="form-group">
+                {{form.note.label}}
+                {{form.note(class_="form-control")}}
+            </div>
+            <div class="form-group">
+                {{form.level.label}}
+                {{form.level(class_="form-control")}}
+            </div>
+            <div class="form-group">
+                {{form.user_group.label}}
+                {{form.user_group(class_="form-control")}}
+            </div>
+            <div class="form-group">
+                {{form.validity.label}}
+                <div class="input-group date" id="datetime-validity-time">
+                    {{form.validity(class_="form-control")}}
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+		{{form.submit(class_="btn btn-default")}}
+            </div>
+
+        </form>
+{% endif %}
+
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{super()}}
+    {{tools.momentjs_script_tag()}}
+    {{tools.datetimepicker_script_tag()}}
+{% endblock %}
+
+{% block styles %}
+    {{super()}}
+    {{tools.datetimepicker_css_tag()}}
+{% endblock %}
+
+{% block body %}
+    {{super()}}
+    {{tools.datetimepicker('datetime-validity-time')}}
+{% endblock %}

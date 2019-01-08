@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+
+{% block title %}Submit - Galaxy OJ{% endblock %}
+
+{% block page_content %}
+    <div class="container">
+        <h1>Submit Code</h1>
+        {% for errs in form.errors.values() %}
+            {% for e in errs %}
+                <div class="alert alert-danger" role='alert'>{{e}}</div>
+            {% endfor %}
+        {% endfor %}
+        <h4>Problem {{pid}}. {{problem.title}}</h4>
+        {% if contest %}
+        <h4>Contest {{cid}}. {{contest.title}}</h4>
+        {% endif %}
+        {% if cid == 0  %}
+        <form  action="{{url_for('oj.submit_code', pid=pid)}}" method="POST">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{form.compiler.label}}
+                {{form.compiler(class_="form-control")}}
+            </div>
+            <div class="form-group" style="display:none">
+                {{form.expect.label}}
+                {{form.expect(class_='form-control',value="0")}}
+            </div>
+            <div class="form-group">
+                {{form.code.label}}
+                {{form.code(class_="form-control", rows="20")}}
+            </div>
+
+            {{form.submit(class_="btn btn-primary",  onclick="timer(10)") }}
+        </form>
+        {% else %}
+        <form  action="{{url_for('oj.contest_submit_code', cid=cid, pid=pid)}}" method="POST" >
+
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{form.compiler.label}}
+                {{form.compiler(class_="form-control")}}
+            </div>
+	  {% if ended  %}
+            <div class="form-group" style="display:none">
+                {{form.expect.label}}
+                {{form.expect(class_='form-control',value="0")}}
+            </div>
+	  {% else %}
+            <div class="form-group">
+                {{form.expect.label}}
+                {{form.expect(class_='form-control')}}
+            </div>
+	  {% endif %}
+            <div class="form-group">
+                {{form.code.label}}
+                {{form.code(class_="form-control", rows="20")}}
+            </div>
+
+            {{form.submit(class_="btn btn-primary", onclick="timer(10)") }}
+        </form>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block foot_script %}
+<script>
+function timer(time) { 
+  var btn = $('#submit');
+  //btn.attr("disabled", true);
+  btn.val(time <= 0 ? "Submint" : ("" + (time) + "秒后提交"));
+  var hander = setInterval(function() { 
+    if (time <= 0) { 
+      clearInterval(hander); 
+      btn.val("Submit");
+      btn.attr("disabled", false); 
+      return false; 
+    }else { 
+      btn.val("" + (time--) + "秒后提交"); 
+    } 
+  }, 1000); 
+} 
+</script>
+{% endblock %}
+
+
+

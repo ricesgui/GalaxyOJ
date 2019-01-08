@@ -1,0 +1,25 @@
+{% extends 'post_list_base.html' %}
+
+{% set current_view = 'Tutorials' %}
+{% set permit_new = current_user.is_admin %}
+{% set post_view = 'post.tutorial' %}
+{% set post_list_view = 'post.tutorials' %}
+{% set post_new_view = 'post.new_tutorial' %}
+{% set post_edit_view = 'post.edit_tutorial' %}
+
+{% block title %}Tutorials - Galaxy OJ{% endblock %}
+
+{% block heading %}Tutorials{% endblock %}
+
+
+{% block meta %}
+{%if is_admin%}
+    <th>Display</th>
+{%endif%}
+{% endblock %}
+
+{% block meta_data %}
+{%if is_admin%}
+    <td><span class="label1">{%if p.hidden%}√{%else%}×</span>{%endif%}</td>
+{%endif%}
+{% endblock %}

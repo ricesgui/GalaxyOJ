@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% from 'tools.html' import ckeditor, ckeditor_script_tag %}
+
+{% set verb = 'Add' if id == 0 else 'Edit' %}
+
+{% block title %}{{ verb }} Assignment - Galaxy OJ{% endblock %}
+
+{% block page_content %}
+    <div class="container">
+        {% for errs in form.errors.values() %}
+            {% for e in errs %}
+                <div class="alert alert-danger" role='alert'>{{e}}</div>
+            {% endfor %}
+        {% endfor %}
+        <h1>{{ verb }} Assignment </h1>
+
+        <form method="POST">
+            {{ form.hidden_tag() }}
+
+            <div class="form-group">
+                {{form.title.label}}
+                {{form.title(class_="form-control")}}
+            </div>
+            <div class="form-group">
+                {{form.content.label}}
+                {{form.content(class_="form-control")}}
+            </div>
+            {{form.submit(class_="btn btn-success")}}
+
+        </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{super()}}
+    {{ckeditor_script_tag()}}
+{% endblock %}
+
+{% block body %}
+    {{super()}}
+    {{ckeditor(form.content.name)}}
+{% endblock %}

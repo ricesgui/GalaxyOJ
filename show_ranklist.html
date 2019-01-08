@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% from 'tools.html' import ckeditor_highlight_tag %}
+
+{% block title %}Ranklist - Galaxy OJ{% endblock %}
+
+{% block page_content %}
+<div class="container">
+    <h2>做题情况</h2>
+    {% block metadata scoped %}
+    {% endblock %}
+    <div class="panel panel-default">
+        <div class="panel-body">
+
+<table align="center" border="1" cellpadding="12" cellspacing="1" class="table">
+	<caption>百度之星、51Nod习题</caption>
+	<thead>
+		<tr>
+			<th scope="row">姓名</th>
+			<th scope="col">区间的价值</th>
+			<th scope="col">刷题计划</th>
+			<th scope="col">K个联通块</th>
+			<th scope="col">货物运输</th>
+			<th scope="col">XOR游戏</th>
+			<th scope="col">区间交</th>
+			<th scope="col">约束和</th>
+			<th scope="col">小Q的家庭作业</th>
+			<th scope="col">B君的梦境</th>
+			<th scope="col">统计</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th scope="row">邓浩然</th>
+			<td>AC </td>
+			<td>AC </td>
+			<td>AC </td>
+			<td>AC </td>
+			<td>AC </td>
+			<td>AC </td>
+			<td>AC </td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>7</td>
+		</tr>
+		<tr>
+			<th scope="row">邓明昱</th>
+			<td>AC </td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>AC </td>
+			<td>&nbsp;</td>
+			<td>AC </td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>3</td>
+		</tr>
+		<tr>
+			<th scope="row">梁一帆</th>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>AC </td>
+			<td>&nbsp;</td>
+			<td>AC </td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>2</td>
+		</tr>
+	</tbody>
+</table>
+
+        </div>
+        <div class="panel-footer text-right">暑假训练题</div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    {{ ckeditor_highlight_tag() }}
+{% endblock %}

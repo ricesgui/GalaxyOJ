@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% from 'tools.html' import pagination %}
+
+{% set current_view = 'Status' %}
+
+{% block title %}Show codes - Galaxy OJ{% endblock %}
+Import name: jinja2.ext.loopcontrols
+{% block page_content %}
+<div class="container">
+<div class="container">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                <p> <h2>Code for submission {{s.id}}</h2></p>
+{%if is_admin%}
+<a href="{{url_for('oj.rejudge_submission', sid=s.id)}}"> <span class="label label-danger">rejudge</span></a>
+{%endif%}
+		<p><h5>
+                {% if c %}
+                 Contest: <span class="label label-info">{{c.title}}</span>&nbsp;&nbsp;
+                {% endif %}
+		{% if p %}
+                 Problem#{{p.id}}: <span class="label label-info">{{p.title}}</span>&nbsp;&nbsp;
+		{% else %}
+                 Problem: Unknown &nbsp;||&nbsp;
+		{% endif %}
+                 Language: <span class="label label-info">{{lang}}</span>&nbsp;&nbsp;
+                 User: <span class="label label-info">{{u.display_name}} </span>
+		{%if is_admin%}<span class="label label-danger">ID:{{u.id}}</span>{%endif%}
+                 time: <span class="label label-info">{{s.time_usage}}ms</span>
+		</h5></p> 
+
+                </div>
+	<div class="panel-body">
+
+
+
+
+<p><h3><span class="label label-success">Score Items</span></h3></p>
+	<div class='well' style="overflow-x: scroll">
+		<table class='imagetable'>
+                    <tbody>
+                        <tr>
+                            <th> Id </th>
+                            <th> Data_in </th>
+                            <th> Data_out </th>
+                            <th> Stu_out(part of,just 30 bytes) </th>
+                            <th> Item</th>
+                        </tr>
+                         
+                         {%set i=0%}{%set j=0%}{%set num=1%}{%set stuck=1%}{%set k1=0%}{%set i1=0%}{% set sid=s.id%}
+                         {% for file in infiles %}
+                        <tr>
+                         {%if ite[i]=='*'%}{%set stuck=stuck+1%}{% set i=i+1%}{%endif%}
+                         <td>#{%if p.judge_type==1%}{{num}}{%elif p.judge_type==2%}{{stuck}}{%endif%}</td>
+                            <td>
+                                 <span class="label label-info"><a href={{url_for('oj.download_data',pid = pid, filename = file,sid=sid)}}>input{{num}}</a></span>
+                            </td>
+                            <td>
+                                 {%set fileout=file[:-2] + "out"%}
+                                 <span class="label label-info"><a href={{url_for('oj.download_data',pid = pid, filename = fileout,sid=sid)}}>output{{num}}</a></span>
+                            </td>
+                            <td>
+                                        {%if wr_item and ite%}
+                                    {%if ite[i]=='0'%}
+                                        <span class="label label-success">
+                                        Corret
+                                       {%set k1=wr_item.find('&',i1)%}{#{wr_item[i1:k1]}#}{%set i1=k1+1%} 
+                                        </span>
+                                    {%else%}
+                                        <span class="label label-danger">
+                                        {%set k1=wr_item.find('&',i1)%}{{wr_item[i1:k1]}}{%set i1=k1+1%} 
+                                        </span>
+                                   {%endif%}
+                                   {%else%}none
+                                   {%endif%}
+
+                            </td>
+                            <td>
+                               {%if ite%}
+
+                                    {%if ite[i]=='0'%}
+                                         <span class="label label-success">Accepted</span>
+                                    {%elif ite[i]=='1'%}
+                                        <span class="label label-danger">Runtime Error</span>
+                                    {%elif ite[i]=='2'%}
+                                        <span class="label label-danger">Time Limit Exceeded</span>
+                                    {%elif ite[i]=='3'%}
+                                        <span class="label label-danger">Memory Limit Exceeded</span>
+                                    {%elif ite[i]=='4'%}
+                                        <span class="label label-danger">Output Limit Exceeded</span>
+                                    {%elif ite[i]=='5'%}
+                                        <span class="label label-danger">Restrict Function</span>
+                                    {%elif ite[i]=='6'%}
+                                        <span class="label label-danger">Wrong Answer</span>
+                                    {%elif ite[i]=='7'%}
+                                        <span class="label label-danger">
+                                        {%set k=ite.find('*',i)%}{{ite[i+1:k]}}{%set i=k%}
+                                        </span>
+                                    {%endif%}
+                                    {% set i=i+1%}{%set num=num+1%}
+                               {%elif s.verdict=="Accepted"%}
+                                    <span class="label label-success">{{s.verdict}}</span>
+                               {%else%}
+                                    <span class="label label-danger">{{s.verdict}}</span>
+                               {%endif%}
+                            </td>
+                        </tr>
+                      	 {%endfor%}
+                    </tbody>
+		</table>
+	</div>
+	
+<p></p>
+
+
+<p><h3><span class="label label-success">Source Code</span></h3></p>
+                    <pre>
+{{code}}
+                    </pre>
+                </div>
+            </div>
+            <br>
+        </div>
+    </div>
+
+{% endblock %}
+

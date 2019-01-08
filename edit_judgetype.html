@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% from 'tools.html' import ckeditor, ckeditor_script_tag %}
+
+{% set verb = 'Add' if pid == 0 else 'Edit' %}
+
+{% block title %}{{ verb }} Problem - Galaxy OJ{% endblock %}
+
+{% block page_content %}
+    <div class="container">
+        {% for errs in form.errors.values() %}
+            {% for e in errs %}
+                <div class="alert alert-danger" role='alert'>{{e}}</div>
+            {% endfor %}
+        {% endfor %}
+        <h1>{{ verb }} problem </h1>
+<p>ID&nbsp;&nbsp;{{prob.id}}</p>
+<p>Title&nbsp;&nbsp;{{prob.title}}</p>
+<p>Judge_type&nbsp;&nbsp;{{prob.judge_type}}&nbsp;&nbsp;1为传统测试，2为捆绑测试，3为提交答案，4为交互</p>
+<p>Special_judge&nbsp;&nbsp;{{prob.special_judge}}</p>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+
+
+
+            <div class="form-group">
+                {{form.special_judge.label}}
+                {{form.special_judge(class_="form-control")}}
+            </div>
+            <div class="form-group">
+                {{form.judge_type.label}}
+                <span> (kilobytes) </span>
+                {{form.judge_type(class_="form-control",type="number")}}
+            </div>
+            {{form.submit(class_="btn btn-success")}}
+
+        </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{super()}}
+    {{ckeditor_script_tag()}}
+{% endblock %}
+
+{% block body %}
+    {{super()}}
+
+{% endblock %}

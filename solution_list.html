@@ -1,0 +1,22 @@
+{% extends 'post_list_base.html' %}
+
+{% set current_view = 'Solutions' %}
+{% set permit_new = current_user.is_authenticated %}
+{% set post_view = 'post.solution' %}
+{% set post_list_view = 'post.solutions' %}
+{% set post_new_view = 'post.new_solution' %}
+{% set post_edit_view = 'post.edit_solution' %}
+
+{% block title %}Solutions - Galaxy OJ{% endblock %}
+
+{% block heading %}Solutions{% endblock %}
+
+{% block meta %}
+    <th>题目</th>
+{% endblock %}
+
+{% block meta_data %}
+    <td><a href="{{url_for('oj.problem', pid=p.problem.id)}}">problem {{p.problem.id}}:{{p.problem.title}}</a></td>
+{% endblock %}
+
+

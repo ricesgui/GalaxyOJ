@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% from 'tools.html' import ckeditor, ckeditor_script_tag %}
+
+{% set verb = 'Add' if pid == 0 else 'Edit' %}
+
+{% block title %}{{ verb }} Problem - Galaxy OJ{% endblock %}
+
+{% block page_content %}
+    <div class="container">
+        {% for errs in form.errors.values() %}
+            {% for e in errs %}
+                <div class="alert alert-danger" role='alert'>{{e}}</div>
+            {% endfor %}
+        {% endfor %}
+        <h1>{{ verb }} problem</h1>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{form.title.label}}
+                {{form.title(class_="form-control")}}
+            </div>
+            <div class="form-group">
+                {{form.problem_desc.label}}
+                {{form.problem_desc(class_="form-control")}}
+            </div>
+            <div class="form-group">
+                {{form.input_desc.label}}
+                {{form.input_desc(class_="form-control")}}
+            </div>
+            <div class="form-group">
+                {{form.output_desc.label}}
+                {{form.output_desc(class_="form-control")}}
+            </div>
+            <div class="form-group">
+                {{form.sample_input.label}}
+                {{form.sample_input(class_="form-control")}}
+            </div>
+            <div class="form-group">
+                {{form.sample_output.label}}
+                {{form.sample_output(class_="form-control")}}
+            </div>
+            <div class="form-group">
+                {{form.source.label}}
+                {{form.source(class_="form-control")}}
+            </div>
+            <div class="form-group">
+                {{form.time_limit.label}}
+                <span> (microseconds) </span>
+                {{form.time_limit(class_="form-control",type="number")}}
+            </div>
+            <div class="form-group">
+                {{form.memory_limit.label}}
+                <span> (kilobytes) </span>
+                {{form.memory_limit(class_="form-control",type="number")}}
+            </div>
+            <div class="form-group">
+                {{form.level.label}}
+                {{form.level(class_="form-control")}}
+            </div>
+            <div class="form-group">
+                {{form.shared.label}}
+                {{form.shared(class_="form-control")}}
+            </div>
+			<div class="form-group">
+                {{form.upload_data_way.label}}
+                {{form.upload_data_way(class_="form-control")}}
+            </div>
+            <div class="form-group">
+                <div>
+                {{form.taglist.label}} 
+                {{form.taglist(class_="form-control", style="height: 260px;", id="taglist", multiple="multiple")}}
+                </div>
+                <script type="text/javascript">
+                  $(document).ready(function() {
+                      {% if form.taglist.default != None %}
+                        valuelist = {{form.taglist.default}};
+                      {% else %}
+                        valuelist = []
+                      {% endif %}
+                      for(var x = 0; x < valuelist.length; x++) {
+                        $("option[value="+"'"+valuelist[x]+"']").attr("selected", "selected");
+                      }
+                     $("#taglist").multiselect({
+                            includeSelectAllOption: true,
+                            enableFiltering: true
+                      });
+
+   <!--      $('#taglist').multipleSelect();
+
+-->
+                  });
+                </script>
+		<style type="text/css">
+		  #taglist + * .dropdown-menu li
+		  {
+		  	display: inline-block;
+		  }
+		  #taglist + * .dropdown-menu
+		  {
+			min-width: 600px;
+		  }
+		</style>
+            </div>
+
+
+
+            {{form.submit(class_="btn btn-success")}}
+            {% if pid != 0 %}
+            <a class="btn btn-danger"
+               href="{{url_for('admin.manage_data', pid=pid)}}" target="_blank">
+                Test Cases
+            </a>
+            {% endif %}
+        </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<!-- {{super()}} -->
+    {{ckeditor_script_tag()}}
+{% endblock %}
+
+{% block body %}
+    {{super()}}
+    {{ckeditor(form.problem_desc.name)}}
+    {{ckeditor(form.input_desc.name)}}
+    {{ckeditor(form.output_desc.name)}}
+    {{ckeditor(form.sample_input.name)}}
+    {{ckeditor(form.sample_output.name)}}
+{% endblock %}

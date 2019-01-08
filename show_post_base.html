@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% from 'tools.html' import ckeditor_highlight_tag %}
+
+{% block title %}{{post.title}} - Galaxy OJ{% endblock %}
+
+{% block page_content %}
+<div class="container">
+    <h2>{{post.title + " "}}
+	{%if is_admin%}<a href="{{url_for('post.edit_tutorial', id=post.id)}}"><span class="label label-success">Edit</span></a>{%endif%}
+    </h2>
+    {% block metadata scoped %}
+         By <span class="label badge"> {{post.owner.display_name}}</span>
+	{%if post.homework%}
+		<h4> <a href="{{url_for('auth.new_comment',assignment_type='post',cid=post.id,id=0)}}" class="btn btn-success btn-sm">New Assignment</a></h4>
+	{%endif%}
+        
+    {% endblock %}
+
+    <div id="edit_course_tabsContent" class="tab-content">
+        <script type="text/javascript" src="{{url_for('static', filename = 'js/pdfobject.js')}}"></script>
+        <div class="tab-pane fade in active" id="basic">
+            {% if post.pdf %}
+                <div id="show_pdf"></div>
+                <button class="btn btn-default" id="show-ppt" onclick="show_pdf()"> 显示解答 </button>
+            <script>
+                function show_pdf() {
+                    PDFObject.embed("{{url_for('static', filename='/tutorial_pdf/%s'%post.pdf)}}", "#show_pdf");
+                    document.getElementById("show-ppt").setAttribute("class", "hidden");
+                }
+            </script>
+            {% endif %}
+        </div>
+    </div>
+    <div class="panel panel-default">
+
+
+
+
+   
+<!--  显示ppt
+
+
+ 	<div id="edit_course_tabsContent" class="tab-content">
+	<script type="text/javascript" src="{{url_for('static', filename = 'js/pdfobject.js')}}"></script>
+        <div class="tab-pane fade in active" id="basic">
+	<div id="show_pdf"></div>
+	<button class="btn btn-default" id="show-ppt" onclick="show_pdf()"> 显示讲题ppt </button>
+<script>
+	function show_pdf() {
+		PDFObject.embed("{{url_for('static', filename='/pdf/261.pdf')}}", "#show_pdf");
+		document.getElementById("show-ppt").setAttribute("class", "hidden");
+	}
+</script>
+        </div>
+
+ -->
+
+
+
+        <div class="panel-body" style="overflow-x: scroll">
+            {{post.content | safe}}
+        </div>
+	{%if post.homework%}
+        <div class="panel-body">
+            <div class="panel panel-default">
+                <div class="panel-heading">已提交名单</div>
+                <div class="panel-body">
+		{% for c in subuser %}
+			<span class="label label-success">{{c}}</span>&nbsp;
+		{%endfor%}
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">作业列表</div>
+                <div class="panel-body">
+       <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Content</th>
+                    <th>User</th>
+                    <th>Sub_Time</th>
+                    <th>Edit</th>
+                </tr>
+            </thead>
+            <tbody>{% set k=0%}
+                {% for c in comment %}
+                    {% set comment_url = "/" %}{% set k=k+1%}
+                    <tr>
+                        <td><strong>{{k}}</strong></td>
+                        <td><strong><a href="{{url_for('auth.show_comment',cid=post.id,id=c.id)}}">{{c.title}}</a></strong></td>
+                        <td>{{c.author}}</td>
+                        <td>{{c.create_time}}</td>
+			{%if is_admin or c.user_id == current_user.id%}
+                        	<td>
+				<a href="{{url_for('auth.edit_comment',cid=post.id,id=c.id)}}"><span class="label label-success">Edit</span></a>
+				&nbsp;  &nbsp;
+				{%if is_admin%}
+				<a href="{{url_for('auth.delete_comment',cid=post.id,id=c.id)}}"><span class="label label-danger">Delete</span></a>
+				{%endif%}
+			</td>
+
+			{% else %}
+				<td><span class="label label-success">/</span></td>
+			{%endif%}
+                    </tr>
+
+                {% endfor %}
+            </tbody>
+        </table>
+                </div>
+            </div>
+        </div>
+	{%endif%}
+        <div class="panel-footer text-right">...</div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    {{ ckeditor_highlight_tag() }}
+{% endblock %}

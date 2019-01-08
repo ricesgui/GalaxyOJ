@@ -1,0 +1,51 @@
+﻿{% extends 'base.html' %}
+{% from 'tools.html' import pagination %}
+
+{% block title %}Users - Galaxy OJ{% endblock %}
+{% set is_root = current_user.is_authenticated and current_user.privilege_level == ROOT_PRIVILEGE %}
+
+{% block page_content %}
+    <div class="container">
+        <div class="panel panel-default">
+        <div class="panel-heading">Users</div>
+        <div class="panel-body">
+	<a href="/admin/batch_add_users"> 批量添加用户 </a>/<a href="/admin/download_sample"> 用户添加模板 </a>
+	</div>
+        <table class="table table-striped2">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>用户名</th>
+                    <th>昵称</th>
+                    <th>姓名</th>
+                    <th>邮箱</th>
+                    <th>组别</th>
+                    <th>类型</th>
+                    <th>权限</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in users %}
+                    {% set edit_url = url_for('admin.manage_user', uid = u.id) if is_root else url_for('admin.edit_user', uid = u.id) %}
+                    {% set delete_url = url_for('admin.delete_user', uid = u.id ,nowpage=page) %}
+                    <tr>
+                        <th scope="row">{{u.id}}</th>
+                        <td><a href="{{edit_url}}"><strong>{{u.login_name}}</strong></a></td>
+                        <td>{{u.nickname or ""}}</td>
+                        <td>{{u.real_name or ""}}</td>
+                        <td><a href="mailto:{{u.email}}">{{u.email}}</a></td>
+                        <td> {% if u.privilege_level > 0 %} <span class="label label-danger">管理员</span> {% else %} 用户{% endif %}</td>
+                        <td>{% if u.level=='Advanced' %}<font color="#FF4500">提高组</font>{% else %}<font color="#7A67EE">普及组</font>{% endif %}</td>
+                        <td>{% if u.user_group=='Invited' %}<font color="#FF4500">邀请</font>{% else %}<font color="#7A67EE">本校</font>{% endif %}</td>
+                        <th>
+                            <a href="{{delete_url}}">删除用户</a>
+                        </th>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+        {{ pagination(page, all_page, 'admin.list_users') }}
+    </div>
+{% endblock %}

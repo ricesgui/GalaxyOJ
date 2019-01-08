@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% import 'tools.html' as tools %}
+
+{% set verb = 'Add' if cid == 0 else 'Edit' %}
+
+{% block title %}{{ verb }} Course - Galaxy OJ{% endblock %}
+
+{% block page_content %}
+<div class="container">
+
+    {% for errs in form.errors.values() %}
+    {% for e in errs %}
+    <div class="alert alert-danger" role='alert'>{{e}}</div>
+    {% endfor %}
+    {% endfor %}
+    <h1>{{ verb }} 课程</h1>
+
+    <ul id="edit_course_tabs" class="nav nav-tabs">
+        <li class="active"><a href="#basic" data-toggle="tab"> Basic Info </a> </li>
+        <li><a href="#problems" data-toggle="tab"> Contests </a></li>
+    </ul>
+
+    <div id="edit_course_tabsContent" class="tab-content">
+        <div class="tab-pane fade in active" id="basic">
+            <form action="{{url_for('admin.edit_course',cid=cid)}}" enctype="multipart/form-data" method="POST">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    {{form.title.label}}
+                    {{form.title(class_="form-control")}}
+                </div>
+                <div class="form-group">
+                    {{form.description.label}}
+                    {{form.description(class_="form-control")}}
+                </div>
+                <div class="form-group">
+                    {{form.date.label}}
+                    <div class="input-group date col-sm-6" id="datetime-start-time">
+                        {{form.date(class_="form-control")}}
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{form.level.label}}
+                    <div class="input-group date col-sm-6">
+                        {{form.level(class_="form-control")}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{form.pdf.label}}
+                    <div class="input-group date col-sm-6">
+                        {{form.pdf(class_="form-control")}}
+                    </div>
+                </div>
+
+                {{form.submit(class_="btn btn-success")}}
+            </form>
+        </div>
+        <div class="tab-pane fade" id="problems">
+            {% if cid != 0 %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>Title</th>
+                        <th>Modify</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in contests %}
+                    <tr>
+                        <th scope="row">{{c.id}}</th>
+                        <td><a href="{{url_for('oj.contest', id=c.id)}}">{{c.title}}</a></td>
+                        <td>
+                            <a href="{{url_for('admin.edit_contest', cid=cid or 0)}}">Edit</a>
+                            /
+                            <a href="{{url_for('admin.del_course_contest', cid=cid, id=c.id)}}">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="row">
+            <div class="col-md-offset-2 col-md-3">
+                <a class="btn btn-primary" href="{{url_for('admin.new_course_contest', cid=cid)}}">Add New contest</a>
+            </div>
+            <div class="col-md-5">
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button onclick="add_cont()" class="btn btn-primary">添加已经存在的比赛</button>
+                    </span>
+                    <input type="text" class="form-control" id="input-pid" placeholder="input problem ID">
+                </div><!-- /input-group -->
+            </div>
+            </div>
+            {% else %}
+                <h4> 请先创建课程，再上传题目 </h4>
+            {% endif %}
+        </div>
+
+{% endblock %}
+
+{% block scripts %}
+    {{super()}}
+    {{tools.ckeditor_script_tag()}}
+    {{tools.momentjs_script_tag()}}
+    {{tools.datetimepicker_script_tag()}}
+    <script>
+        function add_cont() {
+            id = document.getElementById('input-pid').value;
+            window.location.href = '/admin/add_course_contest/' + {{cid}} + '/' + id;
+        }
+    </script>
+{% endblock %}
+
+{% block styles %}
+    {{super()}}
+    {{tools.datetimepicker_css_tag()}}
+{% endblock %}
+
+{% block body %}
+    {{super()}}
+    {{tools.ckeditor(form.description.name)}}
+    {{tools.datetimepicker('datetime-start-time')}}
+    {{tools.datetimepicker('datetime-end-time')}}
+{% endblock %}
+

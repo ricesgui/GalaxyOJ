@@ -1,0 +1,72 @@
+﻿{% extends 'base.html' %}
+
+{% set current_view = 'Course' %}
+
+{% block title %}{{c.title}} - Galaxy OJ{% endblock %}
+
+{% block page_content %}
+<div class="container">
+    <h2>{{c.title}}</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <ul id="show_course_tabs" class="nav nav-justified nav-pills">
+                <li class="active"><a href="#basic" data-toggle="tab"> 课程信息 </a></li>
+                <li><a href="#contest" data-toggle="tab"> 练习题目 </a></li>
+                <!--li><a href="#practice" data-toggle="tab"> Practice </a></li-->
+            </ul>
+        </div>
+    </div>
+    <div id="edit_course_tabsContent" class="tab-content">
+	<script type="text/javascript" src="{{url_for('static', filename = 'js/pdfobject.js')}}"></script>
+        <div class="tab-pane fade in active" id="basic">
+           
+<!--  9.20暂时禁用pdf -->
+
+<br>
+{% if c.pdf %}
+	<div id="show_pdf"></div>
+	<button class="btn btn-default" id="show-ppt" onclick="show_pdf()"> 显示PPT </button>
+<script>
+	function show_pdf() {
+		PDFObject.embed("{{url_for('static', filename='/pdf/%s'%c.pdf)}}", "#show_pdf");
+		document.getElementById("show-ppt").setAttribute("class", "hidden");
+	}
+</script>
+{% endif %}
+
+<br>
+<br>
+ {{c.description | safe}}
+
+        </div>
+        <div class="tab-pane fade col-sm-8" id="contest">
+	<div class="panel panel-default">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>标题</th>
+                        <th>开始时间</th>
+                        <th>结束时间</th>
+			{% if is_admin %} <th> 管理 </th> {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+		{% for item in c.contests %}
+		    <tr>
+			<td> <a href="{{url_for('oj.contest', id=item.id)}}"> {{item.title}} </a></td>
+			<td> {{item.start_time|dtformat}} </td>
+			<td> {{item.end_time|dtformat}} </td>
+			{% if is_admin %} <th><a href="{{url_for('admin.del_course_contest', cid = c.id, id = item.id)}}">删除</a> </th> {% endif %}
+		    </tr>
+		{% endfor %}
+                </tbody>
+            </table>
+        </div> </div>
+        <!--div class="tab-pane fade" id="practice">
+            Practice
+        </div-->
+    </div>
+</div>
+{% endblock %}
+
+

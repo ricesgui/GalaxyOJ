@@ -1,0 +1,282 @@
+{% extends 'base.html' %}
+{% set current_view = 'Contests' %}
+{% block title %}{{c.title}} - Galaxy OJ{% endblock %}
+{% block page_content %}
+
+
+<div class="container">
+    
+<div class="alert alert-info">
+ <table border="0" >
+    <tr>
+        <td valign=bottom><h2>{{c.title}}</h2></td>
+        <td>&nbsp;&nbsp;&nbsp;</td>
+        <td valign=middle>{% if nowt<c.end_time and not flagt %}<span class="label label-danger" style="font-size:14px;">End time：&nbsp;{{endtime}}</span>{% endif %}</td>
+    </tr>
+ </table>
+</div>
+{% if flagt %}
+<div class="countdown">
+<span class="dash_title2">The test will be ready and running in:</span>
+<div class="dash days_dash">
+	<div class="digit"><span class="days">00</span></div>
+	<span class="dash_title">days</span>
+</div>
+<div class="dash hours_dash">
+	<div class="digit"><span class="hours">00</span></div>
+	<span class="dash_title">hours</span>
+</div>
+<div class="dash minutes_dash">
+	<div class="digit"><span class="minutes">00</span></div>
+	<span class="dash_title">minutes</span>
+</div>
+<div class="dash seconds_dash">
+	<div class="digit"><span class="seconds">00</span></div>
+	<span class="dash_title">seconds</span>
+</div>
+<div><!--space line-->
+	<span class="dash_title3">&nbsp;</span>
+	<h4><span class="label ">&nbsp;</span><h4>
+</div>
+<div >
+	<span class="dash_title2" style="font-size: 16px;">Start time:</span>
+	<span class="label label-danger" style="font-size: 16px;">{{c.start_time}}</span>
+	<span class="dash_title3" style="margin-right:90px;">&nbsp;</span>
+	<span class="dash_title2" style="font-size: 16px;">End time:</span>
+	<span class="label label-danger" style="font-size:16px;">{{c.end_time}}</span>
+</div>
+</div>
+
+<script type="text/javascript" src="/static/js/jquery.min.js"></script> 
+<script type="text/javascript" src="/static/js/jquery.downCount.js"></script> 
+<script class="source" type="text/javascript">
+	$('.countdown').downCount({
+		date: '{{start}}',
+		date2: '{{nowt}}',
+		offset: +8
+	}, function () {
+		
+	});
+</script>
+{% endif %}
+
+{% if not flagt or is_admin %}
+    <div class="row">
+        <div class="col-md-6">
+            <ul id="show_contest_tabs" class="nav nav-justified nav-pills">
+                <li class="active"><a href="#basic" data-toggle="tab"> Basic Info </a></li>
+                <li><a href="#problems" data-toggle="tab"> Problems </a></li>
+                {% if is_admin or flag or iscourse or current_user.id==581 or current_user.id==586%}
+                <li><a href="#standing" data-toggle="tab"> Standing </a></li>
+                {% endif %}
+                {% if flag or is_admin%}
+                <li><a href="#summary" data-toggle="tab"> Summary </a></li>
+                {% endif %}
+                <!--li><a href="#practice" data-toggle="tab"> Practice </a></li-->
+            </ul>
+        </div>
+    </div>
+    <div id="edit_contest_tabsContent" class="tab-content">
+		<script type="text/javascript" src="{{url_for('static', filename = 'js/pdfobject.js')}}"></script>
+        <div class="tab-pane fade in active" id="basic">{{c.description | safe}}
+			<div id="show_pdf"></div>
+      <div>
+        {% if (not flag) and self_decide and (not self_started) %}
+          <p>
+          <form action="{{url_for('oj.contest',id=c.id)}}" method="POST">
+                {{ form.hidden_tag() }}
+                {{form.submit(class_="btn btn-success")}}
+          </form>
+
+        {% endif %}
+      </div>
+		</div>
+      <div class="tab-pane fade" id="problems">
+        <div class="panel panel-default">
+            <table class="table table-striped2">
+                <thead>
+                    <tr>
+                      {% if is_admin or flag or iscourse or current_user.id==581 or current_user.id==586%}
+                        <th>Status</th>
+                      {% endif %}
+                        <th>id</th>
+                        <th>Title</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if self_started or flag or is_admin%}
+                      {% for p in c.problems %}
+                      <tr>
+                        {% if is_admin or flag or iscourse or current_user.id==581 or current_user.id==586%}
+                        {% if p.id in acs %}
+                          <td class="text-success"><span class="glyphicon glyphicon-ok"></span></td>
+                          {% else %}
+                          <td></td>
+                          {% endif %}
+                        {% endif %}
+                          <th scope="row">{{loop.index}}</th>
+                          <td>
+                                  <a href="{{url_for('oj.problem', cid=c.id, pid=loop.index)}}">{{p.title}}</a>
+                                  {%if p.special_judge%}<span class="label label-danger">Special Judge</span>{%endif%}
+                                  {%if p.judge_type==2%}<span class="label label-danger">捆绑测试</span>{%endif%}
+				{% if is_admin and p.shared%}<span class="label label-danger">邀请</span>{%endif%}
+                          </td>
+                      </tr>
+                      {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+		</div>
+		
+        {% if is_admin or flag or iscourse or current_user.id==581 or current_user.id==586%}
+        <div class="tab-pane fade" id="standing">
+        <div class="panel panel-default">
+            <table class="table table-striped2">
+                <thead>
+                    <tr>
+                        <th style="text-align:center;width:3em;">Rank</th>
+                        <th>User</th>
+                        <th>Score</th>
+                        {% for p in c.problems %}
+                        <th>{{loop.index}}</th>
+                        <!--{%if is_admin or current_user.id==581 or current_user.id==586%}{%if not iscourse%} <th>expect</th>{%endif%}{%endif%}--><!--show expect just for admin-->
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if self_started or flag or is_admin%}
+                    {%for item in standing %}
+                    <tr>
+                    <td style="text-align:center">
+                        {% if loop.index == 1 %}   <img style="width:20px;" src="{{url_for('static',filename='icon/gold.ico')}}"></img>
+                        {% elif loop.index == 2 %} <img style="width:20px;" src="{{url_for('static',filename='icon/silver.ico')}}"></img>
+                        {% elif loop.index == 3 %} <img style="width:20px;" src="{{url_for('static',filename='icon/bronze.ico')}}"></img>
+                        {% else %} 
+                        {{loop.index}} 
+                        {% endif %} 
+                    </td>
+                    <td><span class="label badge">{{item[0].real_name}}</span> </td>
+                    {% set (sumscore, sumscore2) = item[1] %}
+                    <td>
+                        <span class="label label-danger">{{sumscore}}</span>
+                        <span class="badge1">{{sumscore2}}</span>
+                    </td>
+
+                    {% for elem in item[2] %}
+                    {% if elem %}
+                        {% set (score,score2,sid, sid2 ,expect) = elem %}
+                        {% if iscourse %}  <!--  9.19 update normal users display code items -->
+                        	{% if sid2%}
+                        		{% if is_admin%}
+                        			{% if score2==100 %}
+                        				<td><a href="{{url_for('oj.show_code',sid=sid2)}}"><span class="label label-success">{{score2}}</span></a></td>
+                        			{% else %}
+                        				<td><a href="{{url_for('oj.show_code',sid=sid2)}}"><span class="label label-danger">{{score2}}</span></a></td>
+                        			{% endif %}
+                        		{% else %}
+                                    {% if score2==100 %}
+                                        <td><span class="label label-success">{{score2}}</span></td>
+                                    {% else %}
+                                        <td><span class="label label-danger">{{score2}}</span></td>
+                                    {% endif %}
+                                {% endif %}
+                        	{% else %}
+                       			<td> <span class="label label-success">{{score2 or 0}}</span> </td>
+                        	{% endif %}
+                        {% else %}
+                            <td>
+                                {% if sid %}
+                                                <a href="{{url_for('oj.show_code',sid=sid)}}"><span class="label label-primary">{{score or 0}}</span></a>
+                                {% else %}
+                                                <span class="label label-primary">{{score or 0}}</span>
+                                {% endif %}
+                                {% if sid2 %}
+                                                <a href="{{url_for('oj.show_code',sid=sid2)}}"><span class="badge1" >{{score2}}</span></a>
+                                {% else %}
+                                                <span class="badge1">{{score2 or 0}}</span>  
+                                {% endif %}
+                        
+                            </td>
+                        {% endif %}
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                    <!--
+                    {% if is_admin or current_user.id==581 or current_user.id==586%}{%if not iscourse%}
+                        {%if elem%}<td><span class="label label-warning">{{expect}}</span></td> 
+                        {%else%}<td></td>
+                        {%endif%}
+                        {%endif%}
+                    {%endif%}-->
+                    
+                {% endfor %}
+
+
+                 </tr>		
+            	{% endfor %}
+              {% endif %}
+                </tbody>
+            </table>
+        </div> </div>
+        {% endif %}      
+
+        {% if flag or is_admin%}
+        <div class="tab-pane fade" id="summary">
+            
+            <h4> <a href="{{url_for('auth.new_comment',assignment_type='contest',cid=c.id,id=0)}}" class="btn btn-success btn-sm">New Assignment</a></h4>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">总结列表</div>
+                <div class="panel-body">
+       <table class="table table-striped2">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Content</th>
+                    <th>User</th>
+                    <th>Sub_Time</th>
+                    <th>Edit</th>
+                </tr>
+            </thead>
+            <tbody>{% set k=0%}
+            
+                {% for com in comment %}
+                    {% set comment_url = "/" %}{% set k=k+1%}
+                    <tr>
+                        <td><strong>{{k}}</strong></td>
+                        <td><strong><a href="{{url_for('auth.show_comment',cid=c.id,id=com.id)}}">{{com.title}}</a></strong></td>
+                        <td>{{com.author}}</td>
+                        <td>{{com.create_time}}</td>
+            {%if is_admin or com.user_id == current_user.id%}
+                            <td>
+                <a href="{{url_for('auth.edit_comment',cid=c.id,id=com.id)}}"><span class="label label-success">Edit</span></a>
+                &nbsp;  &nbsp;
+                {%if is_admin%}
+                <a href="{{url_for('auth.delete_comment',cid=c.id,id=com.id)}}"><span class="label label-danger">Delete</span></a>
+                {%endif%}
+            </td>
+
+            {% else %}
+                <td><span class="label label-success">/</span></td>
+            {%endif%}
+                    </tr>
+
+                {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+                </div>
+            </div>
+
+        </div>
+{% if self_decide %}
+        {% endif %}
+
+    </div>
+</div>
+
+{% endif %}
+
+{% endblock %}
+

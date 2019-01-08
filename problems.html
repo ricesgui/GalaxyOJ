@@ -1,247 +1,199 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>GalaxyOJ</title>
-  <!-- 新 Bootstrap 核心 CSS 文件 -->
-  <link href="css/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
-  <script src="js/jquery-3.3.1.min.js"></script>
-  <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-  <script src="css/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
-  <!-- plugins:css -->
-  <link rel="stylesheet" href="vendors/iconfonts/mdi/css/materialdesignicons.min.css">
-  <link rel="stylesheet" href="vendors/css/vendor.bundle.base.css">
-  <!-- 引入iconfont 图标 -->
-  <link rel="stylesheet" href="http://at.alicdn.com/t/font_901195_qtxazzt6zu.css">
-  <!-- endinject -->
-  <!-- inject:css -->
-  <link rel="stylesheet" href="css/style.css">
-  <!-- endinject -->
-  <link rel="shortcut icon" href="img/favicon.png" />
-</head>
-<body>
-  <div class="container-scroller">
-    <!-- partial -->
-    <div class="container-fluid page-body-wrapper">
-      <!-- partial -->
-      <div class="main-panel">
-        <div class="content-wrapper">
-          <div class="row">
-            <div class="col-12 grid-margin">          
-              {% block page_content %}
-              <div class="container">
-              <div class="panel panel-default">
-              <div class="panel-heading">
-              <h2>Problems {% if is_admin %}<a href="{{url_for('admin.new_problem')}}" class="btn btn-success btn-sm">New</a>{% endif %}</h2></h2>
-              <h4>{% if tag_name %} 当前标签：{{ tag_name }} {% endif %}</h4>
-              </div>
+{% from 'tools.html' import pagination %}
 
-              <div class="row">
-              <div class="pull-left inline" style="margin-left: 2%; margin-top: 0.3%;">
-              {% if sform %}
-              <form action="{{ url_for('oj.list_problems')}}" method="POST">
-                {{sform.hidden_tag()}}
-                <div class="input-group">
-                  {{sform.keyword(class_="form-control",placeholder="请输入题目关键字", style="width: 150px;")}}
-                  <span class="pull-left">
-                  {{sform.taglist(class_="form-control", style="height: 260px;", id="taglist", multiple="multiple")}}
-                  </span>
-                  <span class="pull-left">
-                  {{sform.submit(class_="btn btn-default pull-left")}}
-                  </span>
-                  <script type="text/javascript">
-                    $(document).ready(function() {
-                      $("#taglist").multiselect({
-                              includeSelectAllOption: true,
-                              enableFiltering: true
-                        });
-                    });
-                  </script>
-                  <style type="text/css">    
-                    #taglist + * .dropdown-menu li
-                    {
-                      display: inline-block;
-                    }
-                    #taglist + * .dropdown-menu
-                    {
-                      min-width: 768px;
-                    }
-                    .multiselect-filter
-                    {
-                      width: 100%;
-                    }
-                  </style>
-                </div>
-              </form>
-              {% endif %}
-              </div>
+{% set current_view = 'Problems' %}
 
-              <div class="btn-group pull-right" style="margin-right: 2%; margin-top: 0.3%;">
-              {%if is_admin%}<button type="button" class="btn btn-default" onclick="btnOnclick()">管理</button>{%endif%}
-              <button type="button" class="btn btn-default" onclick="btnOnclick2()">标签</button>
-              <button type="button" class="btn btn-default" onclick="btnOnclick3()">提交</button>
-              </div>
-              </div>
-                  <table id="problemshow" class="table table-striped2">
-                      <thead>
-                          <tr>
-                              <th>AC</th>
-                              <th>ID</th>
-                              <th>Title</th>
-                              <th>Level</th>
-                              <th style="display:none">Tag</th>
-                              <th style="display:none">AC</th>
-                              <th style="display:none">Submit</th>
-                              <th>Source</th>
-                              {% if is_admin %}
-                              <th>Share</th>
-                              <th>Modify</th>
-                              {% endif %}
-                          </tr>
-                      </thead>
-                      <tbody>
-                          {% for p in problems %}
-                          {% if is_admin or p.visible %}
-                              <tr>
-                                  <th>{%if p.id in acproblems%}<span class="label label-success">Y</span>{%endif%}</th>
-                                  <th><a href="{{url_for('oj.problem', pid=p.id)}}"><strong>{{p.id}}</strong></a></th>
-                                  <th>
-                                        <a href="{{url_for('oj.problem', pid=p.id)}}"><strong>{{p.title}}</strong></a>
-                                        {%if p.special_judge%}<span class="label label-danger">Special Judge</span>{%endif%}
-                                        {%if p.judge_type==2%}<span class="label label-danger">捆绑测试</span>{%endif%}
-                                        {%if p.upload_data_way==False%}<span class="label label-danger">vjudge</span>{%endif%}
-                                  </th>
-                                  <th>{% if p.level=='Advanced' %}<span class="label label-info">提高组</span>
-                                  {% else %}<span class="label label-junior">普及组</span>{% endif %}</span>
-                                  </th>
-                                  <th style="display:none">
-                                    {% for tag in p.tags %}
-                                  <a href="{{url_for('oj.list_problems_with_tags', tid=tag.id)}}">  <span class="label label-info">  {{tag.text}}  </span>  </a>  &nbsp;
-                                      {% set have = True %}
-                                    {% endfor %}
-                                    {% if p.tags|length == 0 %}
-                                      <a href="#">
-                                        <span class="label label-info">None</span>
-                                      </a>
-                                    {% endif %}
-                                  </th>
-                                  <th style="display:none"><span class="label label-success">{{p.ac}}</span></th>
-                                  <th style="display:none"><span class="label label-success">{{p.sub}}{%if p.sub%}{%set x=p.ac/p.sub*100%}{%endif%}{#{x|round(precision=2, method='common') }#}</span></th>
-                                  <th><span class="label label-info">{{p.source}}</span> </th>
-                                  {% if is_admin %}   
-                                  <th >{%if p.shared==true%}<span class="label label-danger">邀请</span>{%endif%}</th>
-                                  <td >
-                                      <a href="{{url_for('admin.edit_problem', pid=p.id)}}"><span class="label label-success">Edit</span></a>
-                                      &nbsp; 
-                                      <a href="{{url_for('admin.manage_data',pid=p.id)}}"><span class="label label-primary">Data</span></a> 
-                                      &nbsp;
-                                      <a class="text-danger" onclick="" href="{{url_for('admin.delete_problem', pid=p.id)}}"><span class="label label-danger">Del</span></a>
-                                    &nbsp; 
-                                      <a href="#" onclick="toggle_visible({{p.id}})" id="visible-{{p.id}}"
-                                        class="text-{{'primary' if p.visible else 'muted'}}"
-                                        data-toggle="tooltip" data-placement="top" title="Toggle">
-                                        <span class="label label-warning">{{'Public' if p.visible else 'Hidden'}}</span>
-                                      </a>
-                                  </td>
-                                  {% endif %}
-                              </tr>
-                          {% endif %}
-                          {% endfor %}
-                      </tbody>
-                  </table>   </div>
-                {{ pagination(page, all_page, 'oj.list_problems') }}
-              </div>
+{% block title %}Problems - Galaxy OJ{% endblock %}
 
-              {% endblock %}
 
-              {% block scripts %}
-              {{super()}}
-              <script type="text/javascript">
-                  function toggle_visible(pid) {
-                      obj = document.getElementById('visible-' + pid);
-                      if (obj.innerHTML.search("Public") != -1) {
-                          $.ajax({url:'/admin/toggle_problem_state/' + pid, type:'POST', success:function(){
-                              obj.innerHTML = obj.innerHTML.replace('Public', 'Hidden');
-                              $(obj).removeClass('text-primary').addClass('text-muted');
-                          }});
-                      } else {
-                          $.ajax({url:'/admin/toggle_problem_state/' + pid, type:'POST', success:function(){
-                              obj.innerHTML = obj.innerHTML.replace('Hidden', 'Public');
-                              $(obj).removeClass('text-muted').addClass('text-primary');
-                          }});
-                      }
-                  }
-              </script>
-                <script language="javascript">    
-                    function  btnOnclick3() {
-                      var table = document.getElementById("problemshow");   
-                      for(i=0; i<table.rows.length; i++) {   
-                          td = table.rows[i].cells[1];   
-                          with(table.rows[i].cells[5]){   
-                              var display = style.display;   
-                                if(style.display == '') style.display = 'none'; 
-                                else style.display = '';   
-                          } 
-                          with(table.rows[i].cells[6]){   
-                              var display = style.display;   
-                                if(style.display == '') style.display = 'none'; 
-                                else style.display = '';   
-                          } 
-                      }  
-                  } 
+{% block page_content %}
+<div class="container">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h1>题目 {% if is_admin %}<a href="{{url_for('admin.new_problem')}}" class="btn btn-success btn-sm">New</a>{% endif %}</h1>
+      <h4>{% if tag_name %} 当前标签：{{ tag_name }} {% endif %}</h4>
+    </div>
 
-                    function  btnOnclick() {
-                      var table = document.getElementById("problemshow");   
-                      for(i=0; i<table.rows.length; i++) {   
-                          td = table.rows[i].cells[1];   
-                          with(table.rows[i].cells[9]){   
-                              var display = style.display;   
-                                if(style.display == '')style.display = 'none'; 
-                                else style.display = '';   
-                          } 
-                      }  
-                  }
-                    function  btnOnclick2() {
-                      var table = document.getElementById("problemshow");   
-                      for(i=0; i<table.rows.length; i++) {   
-                          td = table.rows[i].cells[1];   
-                          with(table.rows[i].cells[4]){   
-                              var display = style.display;   
-                                if(style.display == '')style.display = 'none'; 
-                                else style.display = '';   
-                          } 
-                      }  
-                  } 
-              </script>
-
-              {% endblock %}
-            </div> 
+    <div class="row">
+      <div class="pull-left inline" style="margin-left: 2%; margin-top: 0.3%;">
+        {% if sform %}
+        <form action="{{ url_for('oj.list_problems')}}" method="POST">
+          {{sform.hidden_tag()}}
+          <div class="input-group">
+            {{sform.keyword(class_="form-control",placeholder="请输入题目关键字", style="width: 150px;")}}
+            <span class="pull-left">
+            {{sform.taglist(class_="form-control", style="height: 260px;", id="taglist", multiple="multiple")}}
+            </span>
+            <span class="pull-left">
+            {{sform.submit(class_="btn btn-default pull-left")}}
+            </span>
+            <script type="text/javascript">
+              $(document).ready(function() {
+                $("#taglist").multiselect({
+                        includeSelectAllOption: true,
+                        enableFiltering: true
+                  });
+              });
+            </script>
+            <style type="text/css">    
+              #taglist + * .dropdown-menu li
+              {
+                display: inline-block;
+              }
+              #taglist + * .dropdown-menu
+              {
+                min-width: 768px;
+              }
+              .multiselect-filter
+              {
+                width: 100%;
+              }
+            </style>
           </div>
-         
-        </div>
-        <!-- 页脚产权说明 -->
-        <footer class="footer">
-          <div class="d-sm-flex justify-content-center">
-            <p>CopyRight &copy; Galaxy Online Judge System<br>广大附中信息学竞赛课程组</p></div>
-        </footer>
+        </form>
+        {% endif %}
+      </div>
+
+      <div class="btn-group pull-right" style="margin-right: 2%; margin-top: 0.3%;">
+        {%if is_admin%}<button type="button" class="btn btn-default" onclick="btnOnclick()">管理</button>{%endif%}
+        <button type="button" class="btn btn-default" onclick="btnOnclick2()">标签</button>
+        <button type="button" class="btn btn-default" onclick="btnOnclick3()">提交</button>
       </div>
     </div>
+    <div class="table_modal">
+      <table id="problemshow" class="table table-striped2">
+        <thead>
+          <tr>
+            <th>状态</th>
+            <th>编号</th>
+            <th>标题</th>
+            <th>组别</th>
+            <th style="display:none">标签</th>
+            <th style="display:none">通过人数</th>
+            <th style="display:none">提交人数</th>
+            <th>来源</th>
+            {% if is_admin %}
+            <th>权限</th>
+            <th>编辑</th>
+            {% endif %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in problems %}
+          {% if is_admin or p.visible %}
+          <tr>
+            <td>{%if p.id in acproblems%}<span class="label label-success">Y</span>{%endif%}</td>
+            <td><a href="{{url_for('oj.problem', pid=p.id)}}">{{p.id}}</a></td>
+            <td>
+            <a href="{{url_for('oj.problem', pid=p.id)}}">{{p.title}}</a>
+            {%if p.special_judge%}<span class="label1">Special Judge</span>{%endif%}
+            {%if p.judge_type==2%}<span class="label1">捆绑测试</span>{%endif%}
+            {%if p.upload_data_way==False%}<span class="label1">vjudge</span>{%endif%}
+            </td>
+            <td>{% if p.level=='Advanced' %}<span class="label1">提高组</span>
+            {% else %}<span class="label1">普及组</span>{% endif %}</span>
+            </td>
+            <td style="display:none">
+              {% for tag in p.tags %}
+            <a href="{{url_for('oj.list_problems_with_tags', tid=tag.id)}}">  <span class="label label-info">  {{tag.text}}  </span>  </a>  &nbsp;
+                {% set have = True %}
+              {% endfor %}
+              {% if p.tags|length == 0 %}
+                <a href="#">
+                  <span class="label label-info">None</span>
+                </a>
+              {% endif %}
+            </td>
+            <td style="display:none"><span class="label1">{{p.ac}}</span></td>
+            <td style="display:none"><span class="label1">{{p.sub}}{%if p.sub%}{%set x=p.ac/p.sub*100%}{%endif%}{#{x|round(precision=2, method='common') }#}</span></td>
+            <td><span class="label1">{{p.source}}</span> </td>
+            {% if is_admin %}   
+            <td>{%if p.shared==true%}<span class="label1">邀请</span>{%endif%}</td>
+            <td>
+                <a href="{{url_for('admin.edit_problem', pid=p.id)}}"><span class="label label-success">Edit</span></a>
+                &nbsp; 
+                <a href="{{url_for('admin.manage_data',pid=p.id)}}"><span class="label label-primary">Data</span></a> 
+                &nbsp;
+                <a class="text-danger" onclick="" href="{{url_for('admin.delete_problem', pid=p.id)}}"><span class="label label-danger">Del</span></a>
+                &nbsp; 
+                <a href="#" onclick="toggle_visible({{p.id}})" id="visible-{{p.id}}"
+                    class="text-{{'primary' if p.visible else 'muted'}}"
+                    data-toggle="tooltip" data-placement="top" title="Toggle">
+                    <span class="label label-warning">{{'Public' if p.visible else 'Hidden'}}</span>
+                </a>
+            </td>
+            {% endif %}
+          </tr>
+          {% endif %}
+          {% endfor %}
+        </tbody>
+      </table>   
+    </div>
+        {{ pagination(page, all_page, 'oj.list_problems') }}
   </div>
-  <!-- container-scroller -->
+</div>
 
-  <!-- plugins:js -->
-  <script src="vendors/js/vendor.bundle.base.js"></script>
-  <script src="vendors/js/vendor.bundle.addons.js"></script>
-  <script src="js/off-canvas.js"></script>
-  <script src="js/misc.js"></script>
-  <!-- endinject -->
-  <!-- Custom js for this page-->
-  <script src="js/dashboard.js"></script>
-  <!-- End custom js for this page-->
-</body>
+{% endblock %}
 
-</html>
+{% block scripts %}
+    {{super()}}
+    <script type="text/javascript">
+        function toggle_visible(pid) {
+            obj = document.getElementById('visible-' + pid);
+            if (obj.innerHTML.search("Public") != -1) {
+                $.ajax({url:'/admin/toggle_problem_state/' + pid, type:'POST', success:function(){
+                    obj.innerHTML = obj.innerHTML.replace('Public', 'Hidden');
+                    $(obj).removeClass('text-primary').addClass('text-muted');
+                }});
+            } else {
+                $.ajax({url:'/admin/toggle_problem_state/' + pid, type:'POST', success:function(){
+                    obj.innerHTML = obj.innerHTML.replace('Hidden', 'Public');
+                    $(obj).removeClass('text-muted').addClass('text-primary');
+                }});
+            }
+        }
+    </script>
+      <script language="javascript">    
+          function  btnOnclick3() {
+            var table = document.getElementById("problemshow");   
+            for(i=0; i<table.rows.length; i++) {   
+                td = table.rows[i].cells[1];   
+                with(table.rows[i].cells[5]){   
+                    var display = style.display;   
+                      if(style.display == '') style.display = 'none'; 
+                      else style.display = '';   
+                 } 
+                with(table.rows[i].cells[6]){   
+                    var display = style.display;   
+                      if(style.display == '') style.display = 'none'; 
+                      else style.display = '';   
+                 } 
+            }  
+        } 
 
+          function  btnOnclick() {
+            var table = document.getElementById("problemshow");   
+            for(i=0; i<table.rows.length; i++) {   
+                td = table.rows[i].cells[1];   
+                with(table.rows[i].cells[9]){   
+                    var display = style.display;   
+                      if(style.display == '')style.display = 'none'; 
+                      else style.display = '';   
+                } 
+            }  
+        }
+          function  btnOnclick2() {
+            var table = document.getElementById("problemshow");   
+            for(i=0; i<table.rows.length; i++) {   
+                td = table.rows[i].cells[1];   
+                with(table.rows[i].cells[4]){   
+                    var display = style.display;   
+                      if(style.display == '')style.display = 'none'; 
+                      else style.display = '';   
+                } 
+            }  
+        } 
+    </script>
+
+{% endblock %}

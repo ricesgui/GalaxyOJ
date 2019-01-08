@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% from 'tools.html' import ckeditor_highlight_tag %}
+
+{% block title %}{{c.title}} - Galaxy OJ{% endblock %}
+
+{% block page_content %}
+<div class="container">
+    <h2>{{c.title + " "}}</h2>
+	By <span class="label badge"> {{c.author}}</span>
+    {% block metadata scoped %}
+       <p>
+		<h4><a href="{{url_for('oj.contest',id=cid)}}" class="btn btn-success btn-sm">返回比赛</a></h4>
+        </p>
+    {% endblock %}
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            {{c.content | safe}}
+        </div>
+        <div class="panel-footer text-right">...</div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    {{ ckeditor_highlight_tag() }}
+{% endblock %}

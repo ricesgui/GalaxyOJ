@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% from 'tools.html' import pagination %}
+
+{% set current_view = 'Course' %}
+
+{% block title %}Courses - Galaxy OJ{% endblock %}
+
+{% block page_content %}
+<div class="container">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h2>Courses {% if is_admin %}<a href="{{url_for('admin.new_course')}}" class="btn btn-success btn-sm">New</a>{% endif %}</h2>
+    </div>
+	  <div class="table_modal">
+      <table class="table table-striped2" >
+        <thead>
+          <tr>
+            <th>组别</th>
+            <th>标题</th>
+
+            <th>作者</th>
+            {% if is_admin %}
+            <th>编辑</th>
+            {% endif %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in courses %}
+            {% set course_url = url_for('oj.course', id=c.id) %}
+            <tr>
+              <td>{{'提高' if c.level == 'Advanced' else '普及'}}</td>
+              <td><a href="{{course_url}}">{{c.title}}</a></td>
+              <td><span class="label1">{{c.owner.display_name}}</span></td>
+              {% if is_admin %}
+              {% set edit_url = url_for('admin.edit_course', cid=c.id) %}
+              {% set delete_url = url_for('admin.delete_course', cid = c.id) %}
+              <td><a href="{{edit_url}}"><span class="label label-success">Edit</span></a> &nbsp;&nbsp;  <a href="{{delete_url}}"><span class="label label-danger">Delete</span></a></td>
+              {% endif %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>    
+	  </div>
+      {{ pagination(page, all_page, 'oj.list_courses') }}
+  </div>
+</div>
+{% endblock %}
+

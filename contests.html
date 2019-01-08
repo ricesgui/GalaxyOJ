@@ -1,129 +1,74 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
+{% from 'tools.html' import pagination %}
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>GalaxyOJ</title>
-  <!-- 新 Bootstrap 核心 CSS 文件 -->
-  <link href="css/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
-  <script src="js/jquery-3.3.1.min.js"></script>
-  <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-  <script src="css/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
-  <!-- plugins:css -->
-  <link rel="stylesheet" href="vendors/iconfonts/mdi/css/materialdesignicons.min.css">
-  <link rel="stylesheet" href="vendors/css/vendor.bundle.base.css">
-  <!-- 引入iconfont 图标 -->
-  <link rel="stylesheet" href="http://at.alicdn.com/t/font_901195_qtxazzt6zu.css">
-  <!-- endinject -->
-  <!-- inject:css -->
-  <link rel="stylesheet" href="css/style.css">
-  <!-- endinject -->
-  <link rel="shortcut icon" href="img/favicon.png" />
-</head>
-<body>
-  <div class="container-scroller">
-    <!-- partial -->
-    <div class="container-fluid page-body-wrapper">
-      <!-- partial -->
-      <div class="main-panel">
-        <div class="content-wrapper">
-          <div class="row">
-            <div class="col-12 grid-margin">          
-              
+{% set current_view = 'Contests' %}
+
+{% block title %}Contests - Galaxy OJ{% endblock %}
+
 {% block page_content %}
 <div class="container">
-<div class="panel panel-default">
-<div class="panel-heading">
-        <h2>Contests {% if is_admin %}<a href="{{url_for('admin.new_contest')}}" class="btn btn-success btn-sm">New</a>{% endif %}</h2></h2>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h2>Contests {% if is_admin %}<a href="{{url_for('admin.new_contest')}}" class="btn btn-success btn-sm">New</a>{% endif %}</h2>
     </div>
-        <table class="table table-striped2">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-               
-                    <th>Status</th>
-		    <th>Level</th>
-                    <th>Start Time</th>
-                    <th>End Time</th>
-                    <th>Owner</th>
-                    {% if is_admin %}
-			
-		         <th>authority</th>
-                         <th>Modify</th>
+    <div class="table_modal">
+      <table class="table table-striped2">
+        <thead>
+          <tr>
+            <th>编号</th>
+            <th>名称</th>
+            <th>状态</th>
+		<th>组别</th>
+            <th>开始时间</th>
+            <th>结束时间</th>
+            <th>作者</th>
+            {% if is_admin %}
 
-                    {% endif %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for c in contests %}
-                    {% set contest_url = url_for('oj.contest', id=c.id) %}
-                    {% if not c.courses.count() or is_admin %}
-                    <tr>
-                        <td><a href="{{contest_url}}"><strong>{{c.id}}</strong></a></td>
-                        <td><a href="{{contest_url}}"><strong>{{c.title}}</strong></a></td>
-                      
-                        <td>
-				{% if contest_status[c.id] == -2 %}<span class="label label-warning">Coming</span>
-				{% elif contest_status[c.id] == -1 %}<span class="label label-warning">You haven't started.</span>
-				{% elif contest_status[c.id] == 0 %}<span class="label label-danger">Running</span>
-				{% elif contest_status[c.id] == 1 %}<span class="label label-success">You have finished.</span>
-				{% else %}<span class="label label-success">Ended</span>
-				{% endif %}
-        <!--
-				{% if nowt<c.start_time %}<span class="label label-warning">Coming</span>
-				{% elif nowt>c.start_time and nowt<c.end_time%}<span class="label label-danger">Running</span>
-				{% else %}<span class="label label-success">Ended</span>
-				{% endif %}
-        -->
-			</td>
-			<td>{% if c.level=='Advanced' %}<span class="label label-info">提高组</span>{% else %}<span class="label label-junior">普及组</span>{% endif %}</td>
-			<td>{{c.start_time}}</td>
-                        <td>{{c.end_time}}</td>
-                            <td><span class="label badge">{{c.owner.display_name}} </span></td>
-                            {% if is_admin %}
-                            <td>{% if c.shared %}<span class="label label-danger">邀请</span>{% else %}<span class="label label-info">内部</span>{% endif %}</td>
-                        		{% set edit_url = url_for('admin.edit_contest', cid=c.id) %}
-                            {% set delete_url = url_for('admin.delete_contest', cid = c.id) %}
-                            <td><a href="{{edit_url}}"><span class="label label-success">Edit</span></a> &nbsp;&nbsp; <a href="{{delete_url}}"><span class="label label-danger">Delete</span></a></td>
-                            {% endif %}
-                    </tr>
-                    {% endif %}
+		<th>权限</th>
+		<th>修改</th>
 
-                {% endfor %}
-            </tbody>
-        </table>    </div>
-        {{ pagination(page, all_page, 'oj.list_contests') }}
+            {% endif %}
+          </tr>
+        </thead>
+        <tbody>
+        {% for c in contests %}
+          {% set contest_url = url_for('oj.contest', id=c.id) %}
+          {% if not c.courses.count() or is_admin %}
+          <tr>
+            <td><a href="{{contest_url}}">{{c.id}}</a></td>
+            <td><a href="{{contest_url}}">{{c.title}}</a></td>
+            <td>
+            {% if contest_status[c.id] == -2 %}<span class="label1">Coming</span>
+            {% elif contest_status[c.id] == -1 %}<span class="label1">You haven't started.</span>
+            {% elif contest_status[c.id] == 0 %}<span class="label1">Running</span>
+            {% elif contest_status[c.id] == 1 %}<span class="label1">You have finished.</span>
+            {% else %}<span class="label1">Ended</span>
+            {% endif %}
+            <!--
+            {% if nowt<c.start_time %}<span class="label1">Coming</span>
+            {% elif nowt>c.start_time and nowt<c.end_time%}<span class="label1">Running</span>
+            {% else %}<span class="label1">Ended</span>
+            {% endif %}
+            -->
+            </td>
+            <td>{% if c.level=='Advanced' %}<span class="label1">提高组</span>{% else %}<span class="label1">普及组</span>{% endif %}</td>
+            <td>{{c.start_time}}</td>
+            <td>{{c.end_time}}</td>
+            <td><span class="label1">{{c.owner.display_name}} </span></td>
+            {% if is_admin %}
+            <td>{% if c.shared %}<span class="label label-danger">邀请</span>{% else %}<span class="label1">内部</span>{% endif %}</td>
+            {% set edit_url = url_for('admin.edit_contest', cid=c.id) %}
+            {% set delete_url = url_for('admin.delete_contest', cid = c.id) %}
+            <td><a href="{{edit_url}}"><span class="label label-success">Edit</span></a> &nbsp;&nbsp; <a href="{{delete_url}}"><span class="label label-danger">Delete</span></a></td>
+            {% endif %}
+          </tr>
+            {% endif %}
+
+            {% endfor %}
+        </tbody>
+      </table>    
     </div>
-
-{% endblock %}
-
-            </div> 
-          </div>
-         
-        </div>
-        <!-- 页脚产权说明 -->
-        <footer class="footer">
-          <div class="d-sm-flex justify-content-center">
-            <p>CopyRight &copy; Galaxy Online Judge System<br>广大附中信息学竞赛课程组</p></div>
-        </footer>
-      </div>
+      {{ pagination(page, all_page, 'oj.list_contests') }}
     </div>
   </div>
-  <!-- container-scroller -->
-
-  <!-- plugins:js -->
-  <script src="vendors/js/vendor.bundle.base.js"></script>
-  <script src="vendors/js/vendor.bundle.addons.js"></script>
-  <script src="js/off-canvas.js"></script>
-  <script src="js/misc.js"></script>
-  <!-- endinject -->
-  <!-- Custom js for this page-->
-  <script src="js/dashboard.js"></script>
-  <!-- End custom js for this page-->
-</body>
-
-</html>
-
+{% endblock %}

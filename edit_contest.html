@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% import 'tools.html' as tools %}
+
+{% set verb = 'Add' if cid == 0 else 'Edit' %}
+
+{% block title %}{{ verb }} Contest - Galaxy OJ{% endblock %}
+
+{% block page_content %}
+<div class="container">
+
+    {% for errs in form.errors.values() %}
+    {% for e in errs %}
+    <div class="alert alert-danger" role='alert'>{{e}}</div>
+    {% endfor %}
+    {% endfor %}
+    <h1>{{ verb }} Contest</h1>
+
+    <ul id="edit_contest_tabs" class="nav nav-tabs">
+        <li class="active"><a href="#basic" data-toggle="tab"> Basic Info </a> </li>
+        <li><a href="#problems" data-toggle="tab"> Problems </a></li>
+    </ul>
+
+    <div id="edit_contest_tabsContent" class="tab-content">
+        <div class="tab-pane fade in active" id="basic">
+            <form action="{{url_for('admin.edit_contest',cid=cid)}}" method="POST">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    {{form.title.label}}
+                    {{form.title(class_="form-control")}}
+                </div>
+                <div class="form-group">
+                    {{form.description.label}}
+                    {{form.description(class_="form-control")}}
+                </div>
+                <div class="form-group">
+                    {{form.start_time.label}}
+                    <div class="input-group date" id="datetime-start-time">
+                        {{form.start_time(class_="form-control")}}
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{form.end_time.label}}
+                    <div class="input-group date" id="datetime-end-time">
+                        {{form.end_time(class_="form-control")}}
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{form.passcode.label}}
+                    {{form.passcode(class_="form-control", type="password")}}
+                </div>
+            <div class="form-group">
+                {{form.level.label}}
+                {{form.level(class_="form-control")}}
+            </div>
+            <div class="form-group">
+                {{form.shared.label}}
+                {{form.shared(class_="form-control")}}
+            </div>
+            <div class="form-group">
+                {{form.free_decide.label}}
+                {{form.free_decide(class_="form-control")}}
+            </div>
+            <div class="form-group">
+                <p>若比赛为统一进行，可以留空。</p>
+                {{form.contest_time.label}}
+                <div class="input-group" id="datetime-contest-time">
+                    {{form.contest_time(class_="form-control")}}
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                </div>
+            </div>
+                {{form.submit(class_="btn btn-success")}}
+            </form>
+        </div>
+        <div class="tab-pane fade" id="problems">
+            {% if cid != 0 %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>Title</th>
+                        <th>Modify</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in problems %}
+                    <tr>
+                        <th scope="row">{{p.id}}</th>
+                        <td><a href="{{url_for('oj.problem', pid=p.id)}}">{{p.title}}</a></td>
+                        <td>
+                            <a href="{{url_for('admin.edit_contest_problem', pid=loop.index, cid=cid)}}">Edit</a>
+                            /
+                            <a href="{{url_for('admin.del_contest_problem', pid=p.id, cid=cid)}}">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="row">
+            <div class="col-md-offset-2 col-md-3">
+    <!--            <a class="btn btn-primary" href="{{url_for('admin.new_contest_problem', cid=cid)}}">Add New problem</a> --!>
+            </div>
+            <div class="col-md-5">
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button onclick="add_prob()" class="btn btn-primary">Add Existing Problem</button>
+                    </span>
+                    <input type="text" class="form-control" id="input-pid" placeholder="input problem ID">
+                </div><!-- /input-group -->
+            </div>
+            </div>
+            {% else %}
+                <p>Please create the contest before adding problems to it.</p>
+            {% endif %}
+        </div>
+
+{% endblock %}
+
+{% block scripts %}
+    {{super()}}
+    {{tools.ckeditor_script_tag()}}
+    {{tools.momentjs_script_tag()}}
+    {{tools.datetimepicker_script_tag()}}
+    <script>
+        function add_prob() {
+            pid = document.getElementById('input-pid').value;
+            window.location.href = '/admin/add_contest_problem/' + {{cid}} + '/' + pid;
+        } 
+    </script>
+{% endblock %}
+
+{% block styles %}
+    {{super()}}
+    {{tools.datetimepicker_css_tag()}}
+{% endblock %}
+
+{% block body %}
+    {{super()}}
+    {{tools.ckeditor(form.description.name)}}
+    {{tools.datetimepicker('datetime-start-time')}}
+    {{tools.datetimepicker('datetime-end-time')}}
+    {{tools.datetimepicker('datetime-contest-time', pick_date = 'false')}}
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}批量添加用户 - Galaxy OJ{% endblock %}
+
+{% block page_content %}
+<div class="container">
+    <h1>批量添加用户</h1>
+    <div class="row">
+        <div class="col col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">上传用户名单</div>
+                <div class="panel-body">
+                    <p><a href="{{url_for('admin.batch_add_users_sample')}}">下载示例表格</a> </p>
+{% if not feedback %}
+                    <form action="{{url_for('admin.batch_add_users')}}" method=post enctype=multipart/form-data>
+                        <span class="btn btn-default btn-file">
+                            浏览 <input type=file multiple="" name="file[]">
+                        </span>
+                        <input class="btn btn-default" type=submit value="上传">
+                    </form>
+                </div>
+{% endif %}
+{% if feedback %}
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th> 用户名 </th>
+                            <th> 用户姓名 </th>
+                            <th> 状态 </th>
+                        </tr>
+                        {% for item in feedback %}
+                        <tr class="{{item[3]}}">
+                            <th> {{item[0]}} </th>
+                            <th> {{item[1]}} </th>
+                            <th> {{item[2]}} </th>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+{% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).on('change', '.btn-file :file', function() {
+        var input = $(this),
+            numFiles = input.get(0).files ? input.get(0).files.length : 1,
+            label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+        input.trigger('fileselect', [numFiles, label]);
+    });
+    $(document).ready( function() {
+        $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
+            console.log(numFiles);
+            console.log(label);
+        });
+    });
+</script>
+{% endblock %}
+
+

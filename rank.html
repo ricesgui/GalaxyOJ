@@ -1,0 +1,61 @@
+﻿{% extends 'base.html' %}
+{% from 'tools.html' import pagination %}
+{% set current_view = 'Rank' %}
+{% block title %}Rank - Galaxy OJ{% endblock %}
+{% block page_content %}
+    <div class="container">
+        <div class="panel panel-default">
+        <div class="panel-heading"><h2>Rank</h2></div>
+   	<div class="table_modal">
+        <table class="table table-striped2">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th>Level</th>
+                    <th>Ac_num</th>
+                    <th>Submit</th>
+                </tr>
+            </thead>
+            <tbody>
+	{%if current_user.level=='Advanced'%}
+                {% for u in user %}
+                    <tr>
+                        <td style="text-align:center">
+                             {% if loop.index == 1 %}   <img style="width:20px;" src="{{url_for('static',filename='icon/gold.ico')}}"></img>
+                             {% elif loop.index == 2 %} <img style="width:20px;" src="{{url_for('static',filename='icon/silver.ico')}}"></img>
+                             {% elif loop.index == 3 %} <img style="width:20px;" src="{{url_for('static',filename='icon/bronze.ico')}}"></img>
+                             {% else %} 
+                             {{loop.index}} 
+                             {% endif %} 
+                        </td>
+                        <td><span class="label badge">{{u.real_name}} </span></td>
+			<td>{% if u.level=='Advanced' %}<span class="label label-info">提高组</span>{% else %}<span class="label label-junior">普及组</span>{% endif %}</td>
+                          <td><span class="label badge"> {{u.ac_tot}} </span></td>                     
+                        <td><span class="label badge"> {{u.sub_tot}} </span></td> 
+                    </tr>
+                {% endfor %}
+	{%elif current_user.level=='Beginner'%}
+                {% for u in user2 %}
+                    <tr>
+                        <td style="text-align:center">
+                             {% if loop.index == 1 %}   <img style="width:20px;" src="{{url_for('static',filename='icon/gold.ico')}}"></img>
+                             {% elif loop.index == 2 %} <img style="width:20px;" src="{{url_for('static',filename='icon/silver.ico')}}"></img>
+                             {% elif loop.index == 3 %} <img style="width:20px;" src="{{url_for('static',filename='icon/bronze.ico')}}"></img>
+                             {% else %} 
+                             {{loop.index}} 
+                             {% endif %} 
+                        </td>
+                        <td><span class="label badge">{{u.real_name}} </span></td>
+			<td>{% if u.level=='Advanced' %}<span class="label label-info">提高组</span>{% else %}<span class="label label-junior">普及组</span>{% endif %}</td>
+                          <td><span class="label badge"> {{u.ac_tot}} </span></td>                     
+                        <td><span class="label badge"> {{u.sub_tot}} </span></td> 
+                    </tr>
+                {% endfor %}
+	{%endif%}
+            </tbody>
+        </table>
+        </div>
+        {#{ pagination(page, all_page, 'oj.rank') }#}
+    </div></div>
+{% endblock %}

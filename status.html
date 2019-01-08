@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% from 'tools.html' import pagination %}
+
+
+
+{% set current_view = 'Status' %}
+
+{% block title %}Status - Galaxy OJ{% endblock %}
+
+{% block page_content %}
+  <div class="container">
+	  <div class="panel panel-default">
+      <div class="panel-heading"><h2>Status</h2>&nbsp;&nbsp;&nbsp;
+        <form action="" method="POST" class="form-inline">
+          {{ form.hidden_tag() }}
+          <div class="form-group">
+              {{form.pid.label}}
+              {{form.pid(class_="form-control",placeholder="PID")}}
+          </div>
+          <div class="form-group">
+              {{form.uname.label}}
+              {{form.uname(class_="form-control",placeholder="User ID")}}
+          </div>
+          {{form.submit(class_="btn btn-default")}}
+        </form>
+	    </div>
+      <div class="table_modal">
+        <table  class="table table-striped2" id="status-table" >
+          <thead>
+            <tr>
+              <th>编号</th>
+              <th>题目</th>
+              <th>用户</th>
+              <th>得分</th>
+              <th>状态</th>
+              <th>用时</th>
+              <th>内存</th>
+              <th>提交时间</th>
+              <th>长度</th>
+              {% if is_admin %}
+                    <th> 重测 </th>
+              {% endif %}
+            </tr>
+          </thead>
+        <tbody>
+                {% for s in submissions %}
+                  <tr>
+                  <th scope="row">{{s.id}}</th>
+			          {% if s.problem %}
+                  <td><a href="{{url_for('oj.problem', pid=s.problem.id)}}">{{s.problem.id}}</a></td>
+			          {% else %}
+                  <td>Unknown</td>
+			          {% endif %}
+                <td><span class="label1">{{s.owner.real_name}}</span></td>
+                {% if is_admin or s.owner == current_user %}
+		          	<td>
+                {% if s.score==100 %}<a href="{{url_for('oj.show_code', sid=s.id)}}"><span class="label label-success">{{s.score}}</span></a>
+                {% else %}<a href="{{url_for('oj.show_code', sid=s.id)}}"><span class="label label-danger">{{s.score}}</span></a>
+                {% endif %}
+                </td>
+                <td>
+                {% if s.score==100 %}<a href="{{url_for('oj.show_code', sid=s.id)}}"><span class="label label-success">{{s.verdict or 'Judging'}}</span></a>
+                {% else %}<a href="{{url_for('oj.show_code', sid=s.id)}}"><span class="label label-danger">{{s.verdict or 'Judging'}}</span></a>
+                {% endif %}
+              </td>
+                {% else %}
+                <td>
+                  {% if s.score==100 %}<span class="label label-success">{{s.score}}</span>
+                  {% else %}<span class="label label-danger">{{s.score}}</span>
+                  {% endif %}
+                </td>
+                  <td>
+                    {% if s.score==100 %}<span class="label label-success">{{s.verdict or 'Judging'}}</span>
+                    {% else %}<span class="label label-danger">{{s.verdict or 'Judging'}}</span>
+                    {% endif %}
+                  </td>
+                    {% endif %}
+
+                    <td><span class="td-dd">{{'' if s.time_usage == None else s.time_usage}}</span></td>
+                    <td><span class="td-dd">{{'' if s.memory_usage == None else s.memory_usage}}</span></td>
+		              	{% if not s.submit_time %}
+                        	<td></td>
+			              {% else %}
+                        	<td><span class="td-dd">{{s.submit_time.strftime("%Y-%m-%d %H:%M:%S")}}</span></td>
+			              {% endif %}
+                        <td><span class="td-dd">{{s.code_length}}</span></td>
+			              {% if is_admin %} 	
+		                <td> <a href="{{url_for('oj.rejudge_submission', sid=s.id)}}"> <span class="label label-danger">rejudge</span></a> </td>
+		              	{% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+        {{ pagination(page, all_page, 'oj.list_status') }}
+    </div>
+    </div>
+<script></script>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block page_content %}
+    <div class="container">
+        {% for errs in addform.errors.values() %}
+            {% for e in errs %}
+                <div class="alert alert-danger" role='alert'>{{e}}</div>
+            {% endfor %}
+        {% endfor %}
+        {% for errs in delform.errors.values() %}
+            {% for e in errs %}
+                <div class="alert alert-danger" role='alert'>{{e}}</div>
+            {% endfor %}
+        {% endfor %}
+        <div class="row">
+          <div class="col-xs-12">
+            <h1>Add Tag</h1>
+            <form method="POST">
+              {{addform.hidden_tag()}}
+              <div class="form-group">
+                {{addform.text.label}}
+                {{addform.text(class_="form-control")}}
+              </div>
+              {{addform.submit(class_="btn btn-success")}}
+            </form>
+          </div>
+          <div class="col-xs-12">
+            <h1>Delete Tag</h1>
+            <form method="POST">
+              {{delform.hidden_tag()}}
+              <div class="form-group">
+                {{delform.usergroups.label}}
+                {{delform.usergroups(class_="form-control", style="height: 400px;")}}
+              </div>
+              {{delform.submit(class_="btn btn-success")}}
+            </form>
+          </div>
+        </div>
+    </div>
+{% endblock %}
+
